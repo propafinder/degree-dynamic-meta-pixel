@@ -13,7 +13,7 @@ Telegram is optional and sends only two order outcomes for orders carrying this 
 - `ОПЛАЧЕНО`: order number, UTM source, amount, currency and confirmed payment time.
 - `НЕ ОПЛАЧЕНО`: order number, UTM source, amount, currency and order creation time.
 
-Each message starts with the configured store label, so multiple shops can use the same bot and Chat ID in one Telegram group without mixing their identities.
+Each order message and manual test starts with the configured store label, so multiple shops can use the same bot and Chat ID in one Telegram group without mixing their identities.
 
 Failed and cancelled orders are reported as unpaid immediately. Pending and on-hold orders are reported only after the configured delay, so a normal payment redirect does not produce a false unpaid alert. Paid events are queued immediately. Sending runs through WooCommerce Action Scheduler, with WordPress Cron as a fallback, and retries up to four times without blocking checkout or payment callbacks.
 

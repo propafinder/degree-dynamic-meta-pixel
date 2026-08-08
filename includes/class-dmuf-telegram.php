@@ -127,7 +127,10 @@ class DMUF_Telegram {
 			return array( 'ok' => false, 'message' => 'Telegram выключен или не заполнены Bot Token и Chat ID.' );
 		}
 
-		$text = "<b>ТЕСТ TELEGRAM</b>\nDynamic Meta Pixel подключён корректно.";
+		$config  = $this->settings->telegram_config();
+		$store   = isset( $config['store_label'] ) ? trim( (string) $config['store_label'] ) : '';
+		$heading = '' !== $store ? $store . ': ТЕСТ TELEGRAM' : 'ТЕСТ TELEGRAM';
+		$text    = '<b>' . esc_html( $heading ) . "</b>\nDynamic Meta Pixel подключён корректно.";
 		return $this->send_text( $text );
 	}
 

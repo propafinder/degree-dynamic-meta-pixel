@@ -64,9 +64,11 @@ require_once dirname( __DIR__ ) . '/includes/class-dmuf-telegram.php';
 
 class DMUF_Test_Telegram extends DMUF_Telegram {
 	public $send_calls = 0;
+	public $last_text = '';
 
 	public function send_text( $text ) {
 		$this->send_calls++;
+		$this->last_text = $text;
 		return array( 'ok' => true, 'message' => '' );
 	}
 }
@@ -118,4 +120,8 @@ dmuf_tg_assert( false !== strpos( $unpaid_text, 'GreenRoute: НЕ ОПЛАЧЕН
 dmuf_tg_assert( false !== strpos( $unpaid_text, '2026-08-08 11:30:00' ), 'unpaid message should include order time' );
 dmuf_tg_assert( false === strpos( $paid_text, 'email' ) && false === strpos( $paid_text, 'phone' ), 'message should not contain customer data' );
 
-fwrite( STDOUT, "PASS: paid/unpaid Telegram queue, deduplication, amount and timestamps\n" );
+$test_result = $telegram->send_test_message();
+dmuf_tg_assert( ! empty( $test_result['ok'] ), 'test Telegram message should be sent' );
+dmuf_tg_assert( false !== strpos( $telegram->last_text, 'GreenRoute: ТЕСТ TELEGRAM' ), 'test message should identify the store' );
+
+fwrite( STDOUT, "PASS: paid/unpaid Telegram queue, store labels, deduplication, amount and timestamps\n" );
