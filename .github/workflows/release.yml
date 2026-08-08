@@ -1,0 +1,48 @@
+name: Release plugin
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag and build ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          HEADER_VERSION="$(sed -n 's/^ \* Version: //p' degree-dynamic-meta-pixel.php)"
+          test "$VERSION" = "$HEADER_VERSION"
+          mkdir -p build/degree-dynamic-meta-pixel
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.gitignore' \
+            --exclude='.github' \
+            --exclude='build' \
+            --exclude='tests' \
+            --exclude='*.zip' \
+            --exclude='*.sha256' \
+            ./ build/degree-dynamic-meta-pixel/
+          cd build
+          zip -r "../degree-dynamic-meta-pixel-${VERSION}.zip" degree-dynamic-meta-pixel
+          cd ..
+          sha256sum "degree-dynamic-meta-pixel-${VERSION}.zip" > "degree-dynamic-meta-pixel-${VERSION}.zip.sha256"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            "degree-dynamic-meta-pixel-${GITHUB_REF_NAME#v}.zip" \
+            "degree-dynamic-meta-pixel-${GITHUB_REF_NAME#v}.zip.sha256" \
+            --verify-tag \
+            --generate-notes \
+            --title "Degree Dynamic Meta Pixel ${GITHUB_REF_NAME#v}"

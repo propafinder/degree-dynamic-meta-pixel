@@ -1,0 +1,85 @@
+.dmuf-wrap {
+  max-width: 1440px;
+}
+
+.dmuf-filters {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.dmuf-filters label {
+  display: grid;
+  gap: 4px;
+}
+
+.dmuf-metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 16px 0 24px;
+}
+
+.dmuf-metric {
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  display: grid;
+  min-height: 96px;
+  padding: 14px;
+}
+
+.dmuf-metric span,
+.dmuf-metric small {
+  color: #50575e;
+}
+
+.dmuf-metric strong {
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.dmuf-rules input[type="text"],
+.dmuf-rules input[type="password"] {
+  max-width: 100%;
+  width: 100%;
+}
+
+.dmuf-rules th:first-child,
+.dmuf-rules td:first-child,
+.dmuf-rules th:last-child,
+.dmuf-rules td:last-child {
+  width: 56px;
+}
+
+.dmuf-outcome {
+  font-weight: 600;
+}
+
+.dmuf-paid {
+  color: #008a20;
+}
+
+.dmuf-unpaid {
+  color: #996800;
+}
+
+.dmuf-cancelled {
+  color: #b32d2e;
+}
+
+@media screen and (max-width: 782px) {
+  .dmuf-filters,
+  .dmuf-filters label,
+  .dmuf-filters input,
+  .dmuf-filters select {
+    width: 100%;
+  }
+
+  .dmuf-rules {
+    display: block;
+    overflow-x: auto;
+  }
+}
