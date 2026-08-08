@@ -138,6 +138,10 @@ class DMUF_Admin {
 						<td><input id="dmuf-telegram-chat" class="regular-text" type="text" maxlength="100" name="dmuf_settings[telegram_chat_id]" value="<?php echo esc_attr( $telegram['chat_id'] ); ?>" placeholder="-1001234567890"></td>
 					</tr>
 					<tr>
+						<th scope="row"><label for="dmuf-telegram-store">Название магазина</label></th>
+						<td><input id="dmuf-telegram-store" class="regular-text" type="text" maxlength="80" name="dmuf_settings[telegram_store_label]" value="<?php echo esc_attr( $telegram['store_label'] ); ?>" placeholder="GreenRoute"> <p class="description">Показывается в начале каждого уведомления.</p></td>
+					</tr>
+					<tr>
 						<th scope="row"><label for="dmuf-telegram-unpaid">Когда считать не оплаченным</label></th>
 						<td><input id="dmuf-telegram-unpaid" type="number" min="5" max="1440" name="dmuf_settings[telegram_unpaid_minutes]" value="<?php echo esc_attr( $telegram['unpaid_minutes'] ); ?>"> минут после создания заказа</td>
 					</tr>

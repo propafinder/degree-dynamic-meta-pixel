@@ -2,7 +2,7 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'DMUF_FILE', '/plugin/degree-dynamic-meta-pixel/degree-dynamic-meta-pixel.php' );
-define( 'DMUF_VERSION', '1.2.0' );
+define( 'DMUF_VERSION', '1.2.1' );
 define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );
 

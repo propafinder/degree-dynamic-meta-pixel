@@ -14,6 +14,7 @@ class DMUF_Settings {
 			'telegram_enabled'              => 'no',
 			'telegram_bot_token'            => '',
 			'telegram_chat_id'              => '',
+			'telegram_store_label'           => '',
 			'telegram_unpaid_minutes'        => 30,
 		);
 	}
@@ -53,10 +54,16 @@ class DMUF_Settings {
 
 	public function telegram_config() {
 		$settings = $this->all();
+		$store_label = trim( (string) $settings['telegram_store_label'] );
+		if ( '' === $store_label ) {
+			$store_label = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+		}
+
 		return array(
 			'enabled'              => 'yes' === $settings['telegram_enabled'],
 			'bot_token'            => (string) $settings['telegram_bot_token'],
 			'chat_id'              => (string) $settings['telegram_chat_id'],
+			'store_label'          => substr( sanitize_text_field( $store_label ), 0, 80 ),
 			'unpaid_minutes'       => max( 5, min( 1440, absint( $settings['telegram_unpaid_minutes'] ) ) ),
 		);
 	}
@@ -110,6 +117,7 @@ class DMUF_Settings {
 		$clean['telegram_enabled']             = ! empty( $input['telegram_enabled'] ) ? 'yes' : 'no';
 		$clean['telegram_bot_token']           = substr( $telegram_token, 0, 255 );
 		$clean['telegram_chat_id']             = substr( $chat_id, 0, 100 );
+		$clean['telegram_store_label']          = substr( sanitize_text_field( isset( $input['telegram_store_label'] ) ? wp_unslash( $input['telegram_store_label'] ) : '' ), 0, 80 );
 		$clean['telegram_unpaid_minutes']       = max( 5, min( 1440, absint( isset( $input['telegram_unpaid_minutes'] ) ? $input['telegram_unpaid_minutes'] : 30 ) ) );
 
 		foreach ( array_slice( $raw_rules, 0, 20 ) as $raw_rule ) {

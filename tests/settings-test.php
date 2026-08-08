@@ -29,6 +29,14 @@ function is_multisite() {
 	return false;
 }
 
+function get_bloginfo( $show ) {
+	return 'Fallback Store';
+}
+
+function wp_specialchars_decode( $value, $quote_style = ENT_NOQUOTES ) {
+	return html_entity_decode( $value, $quote_style, 'UTF-8' );
+}
+
 require_once dirname( __DIR__ ) . '/includes/class-dmuf-settings.php';
 
 function dmuf_assert( $condition, $message ) {
@@ -47,6 +55,7 @@ $clean = $settings->sanitize(
 		'telegram_enabled' => '1',
 		'telegram_bot_token' => '123456:ABC_secret-token',
 		'telegram_chat_id' => '-1001234567890',
+		'telegram_store_label' => 'GreenRoute',
 		'telegram_unpaid_minutes' => 1,
 		'rules'            => array(
 			array(
@@ -72,6 +81,7 @@ dmuf_assert( '123456' === $clean['rules'][0]['pixel_id'], 'pixel ID should conta
 dmuf_assert( 'yes' === $clean['telegram_enabled'], 'Telegram enabled flag should be normalized' );
 dmuf_assert( '123456:ABC_secret-token' === $clean['telegram_bot_token'], 'Telegram token should be sanitized without breaking valid characters' );
 dmuf_assert( '-1001234567890' === $clean['telegram_chat_id'], 'Telegram chat ID should be preserved' );
+dmuf_assert( 'GreenRoute' === $clean['telegram_store_label'], 'Telegram store label should be preserved' );
 dmuf_assert( 5 === $clean['telegram_unpaid_minutes'], 'unpaid delay should be at least five minutes' );
 
 $dmuf_test_options[ DMUF_Settings::OPTION_NAME ] = $clean;
@@ -85,6 +95,7 @@ $preserved = $settings->sanitize(
 		'telegram_enabled' => '1',
 		'telegram_bot_token' => '',
 		'telegram_chat_id' => '-1001234567890',
+		'telegram_store_label' => 'GreenRoute',
 		'rules'   => array(
 			array( 'enabled' => '1', 'source' => 'CapPrice', 'pixel_id' => '123456', 'access_token' => '' ),
 		),

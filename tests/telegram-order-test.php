@@ -56,7 +56,7 @@ class WC_Order {
 class DMUF_Settings {
 	public function telegram_ready() { return true; }
 	public function telegram_config() {
-		return array( 'enabled' => true, 'bot_token' => 'token', 'chat_id' => '123', 'unpaid_minutes' => 30 );
+		return array( 'enabled' => true, 'bot_token' => 'token', 'chat_id' => '123', 'store_label' => 'GreenRoute', 'unpaid_minutes' => 30 );
 	}
 }
 
@@ -110,9 +110,11 @@ $paid_text = $message->invoke( $telegram, $paid, 'paid' );
 $unpaid_text = $message->invoke( $telegram, $unpaid, 'unpaid' );
 
 dmuf_tg_assert( false !== strpos( $paid_text, 'ОПЛАЧЕНО' ), 'paid message should have one clear outcome' );
+dmuf_tg_assert( false !== strpos( $paid_text, 'GreenRoute: ОПЛАЧЕНО' ), 'paid message should identify the store' );
 dmuf_tg_assert( false !== strpos( $paid_text, '45.99 GBP' ), 'paid message should include amount and currency' );
 dmuf_tg_assert( false !== strpos( $paid_text, '2026-08-08 11:59:00' ), 'paid message should include payment time' );
 dmuf_tg_assert( false !== strpos( $unpaid_text, 'НЕ ОПЛАЧЕНО' ), 'unpaid message should have one clear outcome' );
+dmuf_tg_assert( false !== strpos( $unpaid_text, 'GreenRoute: НЕ ОПЛАЧЕНО' ), 'unpaid message should identify the store' );
 dmuf_tg_assert( false !== strpos( $unpaid_text, '2026-08-08 11:30:00' ), 'unpaid message should include order time' );
 dmuf_tg_assert( false === strpos( $paid_text, 'email' ) && false === strpos( $paid_text, 'phone' ), 'message should not contain customer data' );
 

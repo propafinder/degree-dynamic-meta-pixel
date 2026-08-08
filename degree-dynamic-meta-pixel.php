@@ -3,7 +3,7 @@
  * Plugin Name: Degree Dynamic Meta Pixel
  * Plugin URI: https://github.com/propafinder/degree-dynamic-meta-pixel
  * Description: Dynamic Meta Pixel/CAPI routing by UTM source with a clean WooCommerce funnel and paid/unpaid Telegram alerts.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Degree Team
  * Requires at least: 6.2
  * Requires PHP: 7.4
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DMUF_VERSION', '1.2.0' );
+define( 'DMUF_VERSION', '1.2.1' );
 define( 'DMUF_FILE', __FILE__ );
 define( 'DMUF_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DMUF_URL', plugin_dir_url( __FILE__ ) );

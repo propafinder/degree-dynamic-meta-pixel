@@ -214,14 +214,18 @@ class DMUF_Telegram {
 	}
 
 	private function order_message( WC_Order $order, $type ) {
-		$is_paid = 'paid' === $type;
+		$is_paid    = 'paid' === $type;
+		$config     = $this->settings->telegram_config();
+		$store      = isset( $config['store_label'] ) ? trim( (string) $config['store_label'] ) : '';
 		$date       = $is_paid ? $order->get_date_paid() : $order->get_date_created();
 		$label      = $is_paid ? 'ОПЛАЧЕНО' : 'НЕ ОПЛАЧЕНО';
 		$time_label = $is_paid ? 'Время оплаты' : 'Время заказа';
 		$time       = $date ? $date->date_i18n( 'Y-m-d H:i:s' ) : wp_date( 'Y-m-d H:i:s' );
 		$amount     = number_format( (float) $order->get_total(), 2, '.', ' ' ) . ' ' . $order->get_currency();
 
-		return '<b>' . $label . "</b>\n"
+		$heading = '' !== $store ? $store . ': ' . $label : $label;
+
+		return '<b>' . esc_html( $heading ) . "</b>\n"
 			. 'Заказ: <code>#' . esc_html( $order->get_order_number() ) . "</code>\n"
 			. 'UTM: <code>' . esc_html( $order->get_meta( '_dmuf_utm_source', true ) ) . "</code>\n"
 			. 'Сумма: <b>' . esc_html( $amount ) . "</b>\n"
