@@ -7,12 +7,38 @@ class DMUF_GitHub_Updater {
 	const SLUG       = 'degree-dynamic-meta-pixel';
 	const UPDATE_URI = 'https://github.com/propafinder/degree-dynamic-meta-pixel';
 	const API_URL    = 'https://api.github.com/repos/propafinder/degree-dynamic-meta-pixel/releases/latest';
-	const CACHE_KEY  = 'dmuf_github_release_v1';
+	const CACHE_KEY  = 'dmuf_github_release_v2';
 
 	public function register() {
 		add_filter( 'update_plugins_github.com', array( $this, 'filter_update' ), 10, 4 );
 		add_filter( 'plugins_api', array( $this, 'plugin_information' ), 20, 3 );
+		add_filter( 'plugin_action_links_' . plugin_basename( DMUF_FILE ), array( $this, 'action_links' ) );
+		add_action( 'admin_post_dmuf_check_github_update', array( $this, 'check_updates_now' ) );
 		add_action( 'upgrader_process_complete', array( $this, 'clear_cache_after_upgrade' ), 10, 2 );
+	}
+
+	public function action_links( $links ) {
+		$url = wp_nonce_url(
+			admin_url( 'admin-post.php?action=dmuf_check_github_update' ),
+			'dmuf_check_github_update'
+		);
+		array_unshift( $links, '<a href="' . esc_url( $url ) . '">Проверить обновления</a>' );
+
+		return $links;
+	}
+
+	public function check_updates_now() {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			wp_die( 'Недостаточно прав.' );
+		}
+
+		check_admin_referer( 'dmuf_check_github_update' );
+		delete_site_transient( self::CACHE_KEY );
+		delete_site_transient( 'dmuf_github_release_v1' );
+		delete_site_transient( 'update_plugins' );
+		wp_update_plugins();
+		wp_safe_redirect( admin_url( 'plugins.php' ) );
+		exit;
 	}
 
 	public function filter_update( $update, $plugin_data, $plugin_file, $locales ) {
@@ -81,6 +107,7 @@ class DMUF_GitHub_Updater {
 		$plugins = isset( $options['plugins'] ) && is_array( $options['plugins'] ) ? $options['plugins'] : array();
 		if ( in_array( plugin_basename( DMUF_FILE ), $plugins, true ) ) {
 			delete_site_transient( self::CACHE_KEY );
+			delete_site_transient( 'dmuf_github_release_v1' );
 		}
 	}
 
@@ -103,13 +130,13 @@ class DMUF_GitHub_Updater {
 		);
 
 		if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
-			set_site_transient( self::CACHE_KEY, array( 'release' => null ), 15 * MINUTE_IN_SECONDS );
+			set_site_transient( self::CACHE_KEY, array( 'release' => null ), 5 * MINUTE_IN_SECONDS );
 			return null;
 		}
 
 		$data    = json_decode( wp_remote_retrieve_body( $response ), true );
 		$release = $this->normalize_release( $data );
-		set_site_transient( self::CACHE_KEY, array( 'release' => $release ), $release ? 6 * HOUR_IN_SECONDS : 15 * MINUTE_IN_SECONDS );
+		set_site_transient( self::CACHE_KEY, array( 'release' => $release ), $release ? 15 * MINUTE_IN_SECONDS : 5 * MINUTE_IN_SECONDS );
 
 		return $release;
 	}

@@ -4,7 +4,7 @@ WordPress/WooCommerce plugin for strict UTM-only attribution and dynamic Meta Pi
 
 ## Updates
 
-The plugin uses the native WordPress update screen and checks the latest public GitHub Release from `propafinder/degree-dynamic-meta-pixel`. Only the release ZIP asset named `degree-dynamic-meta-pixel-VERSION.zip` or `degree-dynamic-meta-pixel.zip` is accepted. Release checks are cached for six hours; automatic updates remain off unless enabled by a WordPress administrator.
+The plugin uses the native WordPress update screen and checks the latest public GitHub Release from `propafinder/degree-dynamic-meta-pixel`. Only the release ZIP asset named `degree-dynamic-meta-pixel-VERSION.zip` or `degree-dynamic-meta-pixel.zip` is accepted. Successful release checks are cached for 15 minutes, and the plugin row includes a manual update check that clears stale release data. Automatic updates remain off unless enabled by a WordPress administrator.
 
 ## Telegram alerts
 

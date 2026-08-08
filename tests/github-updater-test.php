@@ -2,7 +2,7 @@
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'DMUF_FILE', '/plugin/degree-dynamic-meta-pixel/degree-dynamic-meta-pixel.php' );
-define( 'DMUF_VERSION', '1.2.2' );
+define( 'DMUF_VERSION', '1.2.3' );
 define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );
 
@@ -39,6 +39,9 @@ function esc_url_raw( $value ) { return filter_var( $value, FILTER_SANITIZE_URL 
 function esc_html( $value ) { return htmlspecialchars( (string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ); }
 function wp_parse_url( $url ) { return parse_url( $url ); }
 function untrailingslashit( $value ) { return rtrim( $value, '/\\' ); }
+function wp_nonce_url( $url, $action ) { return $url . '&_wpnonce=test'; }
+function admin_url( $path ) { return 'https://example.test/wp-admin/' . ltrim( $path, '/' ); }
+function esc_url( $value ) { return $value; }
 
 require_once dirname( __DIR__ ) . '/includes/class-dmuf-github-updater.php';
 
@@ -50,8 +53,10 @@ function dmuf_update_assert( $condition, $message ) {
 }
 
 $updater = new DMUF_GitHub_Updater();
+$links   = $updater->action_links( array( '<a href="#">Settings</a>' ) );
 $update  = $updater->filter_update( false, array(), 'degree-dynamic-meta-pixel/degree-dynamic-meta-pixel.php', array() );
 
+dmuf_update_assert( false !== strpos( $links[0], 'dmuf_check_github_update' ), 'plugin row should include a manual update check' );
 dmuf_update_assert( is_array( $update ), 'own plugin should receive update data' );
 dmuf_update_assert( '1.3.0' === $update['version'], 'tag version should be normalized' );
 dmuf_update_assert( false !== strpos( $update['package'], '/releases/download/v1.3.0/' ), 'release asset should be used as package' );
